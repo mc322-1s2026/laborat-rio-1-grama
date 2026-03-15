@@ -7,6 +7,7 @@ public class Task {
     public static int totalTasksCreated = 0;
     public static int totalValidationErrors = 0;
     public static int activeWorkload = 0;
+    public int estimatedEffort = 0;
 
     private static int nextId = 1;
 
