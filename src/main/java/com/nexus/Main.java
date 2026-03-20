@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.nexus.exception.NexusValidationException;
+import com.nexus.model.Project;
 import com.nexus.model.Task;
 import com.nexus.model.User;
 import com.nexus.service.LogProcessor;
@@ -53,6 +54,42 @@ public class Main {
                     String file = (logChoice.equals("1")) ? "log_v1.txt" : "log_v2.txt";
                     logProcessor.processLog(file, workspace, users);
                 }
+                case "5" -> {
+                    System.out.println("\n1. Top Performers\n2. Overload Users\n3. Project Health\n4. Global Bottlenecks");
+                    String consulta = scanner.nextLine();
+                    switch (consulta) {
+                        case "1":
+                            System.out.println(workspace.TopPerformers());
+                            break;
+
+                        case "2":
+                            System.out.println(workspace.OverloadUsers());
+                            break;
+                    
+                        case "3":
+                            System.out.println("Nome do Projeto: ");
+                            String proj = scanner.nextLine();
+                            Project p = workspace.buscarProj(proj);
+
+                            if(p != null){
+                                workspace.ProjectHealth(p);
+                            } 
+                            else{
+                                System.out.println("Projeto não encontrado.");
+                            }
+
+                            break;
+
+                        case "4":
+                            System.out.println(workspace.GlobalBottlenecks());
+                            break;
+
+                        default:
+                            System.out.println("\n[!] Opção inválida.");
+                            break;
+                    }
+                    
+                }
                 default -> System.out.println("\n[!] Opção inválida.");
             }
         }
@@ -72,6 +109,7 @@ public class Main {
             2. Adicionar Tarefa
             3. Listar Todas as Tarefas
             4. Processar Log de Ações
+            5. Consultar Tarefas
             0. Sair
             Escolha uma opção:\s""");
     }

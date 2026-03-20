@@ -27,4 +27,12 @@ public class Project {
         }
         else{ Tasks.add(t); }
     }
+
+    public List<Task> getTasks(){
+        return this.Tasks;
+    }
+
+    public String getName(){
+        return this.name;
+    }
 }
