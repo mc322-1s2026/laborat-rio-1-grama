@@ -6,12 +6,13 @@ import com.nexus.exception.NexusValidationException;
 import java.util.ArrayList;
 
 public class Project {
-    private String name;
+
+    private String Nome;
     private List<Task> Tasks;
     private int totalBudget;
 
     public Project(String name, int totalBudget){
-        this.name = name;
+        this.Nome = name;
         this.Tasks = new ArrayList<Task>();
         this.totalBudget = totalBudget;
     }
@@ -33,6 +34,6 @@ public class Project {
     }
 
     public String getName(){
-        return this.name;
+        return this.Nome;
     }
 }

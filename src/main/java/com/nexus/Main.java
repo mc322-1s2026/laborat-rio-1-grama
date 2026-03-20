@@ -90,6 +90,10 @@ public class Main {
                     }
                     
                 }
+                case "6" -> {
+                    createProject();
+                    break;
+                }
                 default -> System.out.println("\n[!] Opção inválida.");
             }
         }
@@ -109,7 +113,8 @@ public class Main {
             2. Adicionar Tarefa
             3. Listar Todas as Tarefas
             4. Processar Log de Ações
-            5. Consultar Tarefas
+            5. Análise
+            6. Criar Projeto
             0. Sair
             Escolha uma opção:\s""");
     }
@@ -145,13 +150,42 @@ public class Main {
             String title = scanner.nextLine();
             System.out.print("Prazo (AAAA-MM-DD): ");
             LocalDate deadline = LocalDate.parse(scanner.nextLine());
-
-            Task newTask = new Task(title, deadline);
+            System.out.println("Horas estimadas: ");
+            int horas = scanner.nextInt();
+            System.out.println("Nome do Projeto: ");
+            String nome = scanner.nextLine();
+            Project projeto = workspace.buscarProj(nome);
+            
+            if(projeto == null){
+                System.out.print("\nCriando novo Projeto\nLimite de horas: ");
+                int lim_hr = scanner.nextInt();
+                projeto = new Project(nome, lim_hr);
+                workspace.addProj(projeto);
+            }
+        
+            Task newTask = new Task(title, deadline, horas, projeto);
+            projeto.addTask(newTask);
+            
             workspace.addTask(newTask);
             System.out.println("[OK] Tarefa adicionada ao backlog.");
         } catch (DateTimeParseException e) {
             System.err.println("[ERRO] Formato de data inválido. Use AAAA-MM-DD.");
         }
+    }
+
+    private static void createProject(){
+        System.out.println("Nome do Projeto: ");
+        String nome = scanner.nextLine();
+
+        if(workspace.buscarProj(nome) != null){
+            System.out.println("\nProjeto já existente.");
+            return;
+        }
+        System.out.println("Limite de horas: ");
+        int lim = scanner.nextInt();
+        Project projeto = new Project(nome, lim);
+        workspace.addProj(projeto);
+        
     }
 
     /**
