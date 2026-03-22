@@ -1,6 +1,8 @@
 package com.nexus.model;
 
+import com.nexus.exception.NexusValidationException;
 import java.time.LocalDate;
+
 
 public class Task {
     // Métricas Globais (Alunos implementam a lógica de incremento/decremento)
@@ -11,8 +13,9 @@ public class Task {
 
     private static int nextId = 1;
 
-    private int id;
-    private LocalDate deadline; // Imutável após o nascimento
+    /* "Final" nos atributos que devem ser imutáveis após o nascimento do objeto */
+    private final int id;
+    private final LocalDate deadline; // Imutável após o nascimento
     private String title;
     private TaskStatus status;
     private User owner;
@@ -35,7 +38,23 @@ public class Task {
      * Regra: Só é possível se houver um owner atribuído e não estiver BLOCKED.
      */
     public void moveToInProgress(User user) {
-        // TODO: Implementar lógica de proteção e atualizar activeWorkload
+        if (user == null)
+        { /* Regra 01: Deve haver um owner atribuído: usuário informado deve existir */
+            totalValidationErrors++;
+            throw new NexusValidationException("Tarefa precisa ter um dono.");
+        }
+        if(getStatus() == TaskStatus.BLOCKED)
+        {/* Regra 02: Tarefa não deve estar BLOCKED */
+            totalValidationErrors++;
+            throw new NexusValidationException("Tarefa bloqueada: Não é possível alterar seu status.");
+        } else
+        {/* Caso contrário, é possível colocar a tarefa como IN_PROGRESS */
+            this.owner = user;
+            this.status = TaskStatus.IN_PROGRESS;
+            activeWorkload++;
+        }
+
+        // [OK] TODO: Implementar lógica de proteção e atualizar activeWorkload
         // Se falhar, incrementar totalValidationErrors e lançar NexusValidationException
     }
 
@@ -44,14 +63,28 @@ public class Task {
      * Regra: Só pode ser movida para DONE se não estiver BLOCKED.
      */
     public void markAsDone() {
-        // TODO: Implementar lógica de proteção e atualizar activeWorkload (decrementar)
+        if(getStatus() == TaskStatus.BLOCKED)
+        {
+            totalValidationErrors++; /* Deveria incrementar isso aqui também? */
+            throw new NexusValidationException("Tarefa bloqueada: Não é possível alterar seu status.");
+        }
+        this.status = TaskStatus.DONE;
+        activeWorkload--;
+        // [OK] TODO: Implementar lógica de proteção e atualizar activeWorkload (decrementar)
     }
 
     public void setBlocked(boolean blocked) {
-        if (blocked) {
-            this.status = TaskStatus.BLOCKED;
-        } else {
-            this.status = TaskStatus.TO_DO; // Simplificação para o Lab
+        /* Task precisa não estar DONE! */
+        if((this.status != TaskStatus.DONE)){
+            if (blocked) 
+            {
+                this.status = TaskStatus.BLOCKED;
+            } else {
+                this.status = TaskStatus.TO_DO; // Simplificação para o Lab
+            }
+        } else { /* Tentaram bloquear uma tarefa com status "DONE" */
+            totalValidationErrors++;
+            throw new NexusValidationException("Tarefa em status \"DONE\" não pode ser bloqueada.");
         }
     }
 
