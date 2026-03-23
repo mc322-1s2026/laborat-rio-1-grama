@@ -28,6 +28,7 @@ public class Task {
         this.status = TaskStatus.TO_DO;
         this.estimatedEffort = horas;
         this.projeto = projeto;
+        this.owner = null;
         
         // Ação do Aluno:
         totalTasksCreated++; 
@@ -88,10 +89,15 @@ public class Task {
         }
     }
 
+    public void setOwner(User u){
+        this.owner = u;
+    }
+
     // Getters
     public int getId() { return id; }
     public TaskStatus getStatus() { return status; }
     public String getTitle() { return title; }
     public LocalDate getDeadline() { return deadline; }
     public User getOwner() { return owner; }
+    public Project getProject() {return projeto;}
 }

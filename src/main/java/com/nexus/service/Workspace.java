@@ -14,9 +14,14 @@ import com.nexus.model.User;
 public class Workspace{
     private final List<Task> tasks = new ArrayList<>();
     private final List<Project> projetos = new ArrayList<>();
+    private final List<User> usuarios = new ArrayList<>();
 
     public void addTask(Task task) {
         tasks.add(task);
+    }
+
+    public void addUser(User user){
+        usuarios.add(user);
     }
 
     public void addProj(Project proj) {
@@ -28,12 +33,17 @@ public class Workspace{
         return Collections.unmodifiableList(tasks);
     }
 
+    public List<User> getUsers(){
+        return Collections.unmodifiableList(usuarios);
+    }
+
     // Um método que retorna os 3 usuários que possuem 
     // o maior número de tarefas no status DONE.
     public List<User> TopPerformers(){
 
         List<User> tp = tasks.stream()
             .filter(t -> t.getStatus().equals(TaskStatus.DONE))
+            .filter(t -> t.getOwner() != null)
             .collect(Collectors.groupingBy(
                 Task::getOwner,
                 Collectors.counting()
@@ -67,16 +77,17 @@ public class Workspace{
 
     // Project Health: Para um dado projeto, calcular o percentual
     // de conclusão (Tarefas DONE / Total de Tarefas).
-    public double ProjectHealth(Project p){
+    public String ProjectHealth(Project p){
         
         long t_total = getTasks().stream().count();
         List<Task> tasks = getTasks().stream()
             .filter(t -> t.getStatus().equals(TaskStatus.DONE))
             .collect(Collectors.toList());
         long t_done = tasks.stream().count();
-        double percent = t_done/t_total;
+        double percent = (double) t_done/t_total;
+        String res = String.format("%.2f%%", percent*100);
 
-        return percent;
+        return res;
 
     }
 

@@ -72,7 +72,7 @@ public class Main {
                             Project p = workspace.buscarProj(proj);
 
                             if(p != null){
-                                workspace.ProjectHealth(p);
+                                System.out.println(workspace.ProjectHealth(p));
                             } 
                             else{
                                 System.out.println("Projeto não encontrado.");
@@ -133,6 +133,7 @@ public class Main {
 
             User newUser = new User(username, email);
             users.add(newUser);
+            workspace.addUser(newUser);
             System.out.println("[OK] Usuário cadastrado.");
         } catch (NexusValidationException e) {
             System.err.println("[ERRO] " + e.getMessage());
