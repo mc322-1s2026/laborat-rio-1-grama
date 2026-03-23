@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.nexus.exception.NexusValidationException;
+import com.nexus.model.Project;
 import com.nexus.model.Task;
 import com.nexus.model.User;
 import com.nexus.service.LogProcessor;
@@ -53,6 +54,46 @@ public class Main {
                     String file = (logChoice.equals("1")) ? "log_v1.txt" : "log_v2.txt";
                     logProcessor.processLog(file, workspace, users);
                 }
+                case "5" -> {
+                    System.out.println("\n1. Top Performers\n2. Overload Users\n3. Project Health\n4. Global Bottlenecks");
+                    String consulta = scanner.nextLine();
+                    switch (consulta) {
+                        case "1":
+                            System.out.println(workspace.TopPerformers());
+                            break;
+
+                        case "2":
+                            System.out.println(workspace.OverloadUsers());
+                            break;
+                    
+                        case "3":
+                            System.out.println("Nome do Projeto: ");
+                            String proj = scanner.nextLine();
+                            Project p = workspace.buscarProj(proj);
+
+                            if(p != null){
+                                workspace.ProjectHealth(p);
+                            } 
+                            else{
+                                System.out.println("Projeto não encontrado.");
+                            }
+
+                            break;
+
+                        case "4":
+                            System.out.println(workspace.GlobalBottlenecks());
+                            break;
+
+                        default:
+                            System.out.println("\n[!] Opção inválida.");
+                            break;
+                    }
+                    
+                }
+                case "6" -> {
+                    createProject();
+                    break;
+                }
                 default -> System.out.println("\n[!] Opção inválida.");
             }
         }
@@ -72,6 +113,8 @@ public class Main {
             2. Adicionar Tarefa
             3. Listar Todas as Tarefas
             4. Processar Log de Ações
+            5. Análise
+            6. Criar Projeto
             0. Sair
             Escolha uma opção:\s""");
     }
@@ -107,13 +150,42 @@ public class Main {
             String title = scanner.nextLine();
             System.out.print("Prazo (AAAA-MM-DD): ");
             LocalDate deadline = LocalDate.parse(scanner.nextLine());
-
-            Task newTask = new Task(title, deadline);
+            System.out.println("Horas estimadas: ");
+            int horas = scanner.nextInt();
+            System.out.println("Nome do Projeto: ");
+            String nome = scanner.nextLine();
+            Project projeto = workspace.buscarProj(nome);
+            
+            if(projeto == null){
+                System.out.print("\nCriando novo Projeto\nLimite de horas: ");
+                int lim_hr = scanner.nextInt();
+                projeto = new Project(nome, lim_hr);
+                workspace.addProj(projeto);
+            }
+        
+            Task newTask = new Task(title, deadline, horas, projeto);
+            projeto.addTask(newTask);
+            
             workspace.addTask(newTask);
             System.out.println("[OK] Tarefa adicionada ao backlog.");
         } catch (DateTimeParseException e) {
             System.err.println("[ERRO] Formato de data inválido. Use AAAA-MM-DD.");
         }
+    }
+
+    private static void createProject(){
+        System.out.println("Nome do Projeto: ");
+        String nome = scanner.nextLine();
+
+        if(workspace.buscarProj(nome) != null){
+            System.out.println("\nProjeto já existente.");
+            return;
+        }
+        System.out.println("Limite de horas: ");
+        int lim = scanner.nextInt();
+        Project projeto = new Project(nome, lim);
+        workspace.addProj(projeto);
+        
     }
 
     /**

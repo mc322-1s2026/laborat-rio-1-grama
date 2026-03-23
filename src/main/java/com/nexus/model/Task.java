@@ -9,6 +9,7 @@ public class Task {
     public static int totalTasksCreated = 0;
     public static int totalValidationErrors = 0;
     public static int activeWorkload = 0;
+    public int estimatedEffort;
 
     private static int nextId = 1;
 
@@ -18,12 +19,15 @@ public class Task {
     private String title;
     private TaskStatus status;
     private User owner;
+    private Project projeto;
 
-    public Task(String title, LocalDate deadline) {
+    public Task(String title, LocalDate deadline, int horas, Project projeto) {
         this.id = nextId++;
         this.deadline = deadline;
         this.title = title;
         this.status = TaskStatus.TO_DO;
+        this.estimatedEffort = horas;
+        this.projeto = projeto;
         
         // Ação do Aluno:
         totalTasksCreated++; 
