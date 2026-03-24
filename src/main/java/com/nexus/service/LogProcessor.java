@@ -6,8 +6,30 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+    * Processamento de registros
+    * 
+    * Lê arquivos de texto e converte as linhas em comandos de
+    * criação, consulta ou alteração no sistema.
+    *
+    */
 public class LogProcessor {
 
+    /**
+     * Inicializa o LogProcessor, percorre as linhas de um 
+     * arquivo de texto, cada linha representando um comando,
+     * sendo ";" o separador dos parâmetros.
+     * 
+     * Caso a primeira entrada seja um comando válido, coleta os demais
+     * parâmetros e chama os métodos correspondentes.
+     * 
+     * Em caso de erro, desconsidera o comando e retorna uma 
+     * mensagem de erro, seguindo para a linha seguinte.
+     *
+     * @param fileName nome do arquivo a ser percorrido
+     * @param workspace referência a classe workspace {@link Workspace}
+     * @param users lista de usuários cadastrados no sistema
+     */
     public void processLog(String fileName, Workspace workspace, List<User> users) {
         
         try {

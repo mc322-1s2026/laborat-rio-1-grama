@@ -11,34 +11,71 @@ import com.nexus.model.Task;
 import com.nexus.model.TaskStatus;
 import com.nexus.model.User;
 
+/**
+* Classe que atua como o contêiner principal.
+* 
+* Responsável por armazenar as listas globais de tarefas {@link Task}, usuários {@link User} 
+* e projetos {@link  Project}. Oferece métodos de busca e filtragem, usados nos relatórios.  
+*/
 public class Workspace{
     private final List<Task> tasks = new ArrayList<>();
     private final List<Project> projetos = new ArrayList<>();
     private final List<User> usuarios = new ArrayList<>();
 
+    /**
+     * Adiciona nova Task {@link Task} na lista de tarefas
+     *
+     * @param task tarefa a ser adicionada
+     */
     public void addTask(Task task) {
         tasks.add(task);
     }
 
+    /**
+     * Adiciona novo usuário {@link User} na lista de usuários
+     *
+     * @param user usuário a ser adicionado
+     */
     public void addUser(User user){
         usuarios.add(user);
     }
 
+
+    /**
+     * Adiciona uum novo projeto {@link Project} na lista de projetos
+     * 
+     * @param proj Projeto a ser adicionado
+     */
     public void addProj(Project proj) {
         projetos.add(proj);
     }
 
+
+    /**
+     * Retorna a lista de tarefas cadastradas global como objeto imodificável
+     * 
+     * @return lista inalterável com todas as Tasks 
+     */
     public List<Task> getTasks() {
         // Retorna uma visão não modificável para garantir encapsulamento
         return Collections.unmodifiableList(tasks);
     }
 
+    /**
+     * Retorna a lista de usuários cadastrados global como objeto imodificável
+     *
+     * @return lista inalterável com todos os usuários
+     */
     public List<User> getUsers(){
         return Collections.unmodifiableList(usuarios);
     }
 
-    // Um método que retorna os 3 usuários que possuem 
-    // o maior número de tarefas no status DONE.
+    /**
+     * Retorna os 3 usuários que possuem mais tarefas concluídas,
+     * ou seja, com status DONE {@link TaskStatus} com o uso de Stream API.
+     *
+     * @return lista contendo três usuários
+     */
     public List<User> TopPerformers(){
 
         List<User> tp = tasks.stream()
@@ -57,8 +94,12 @@ public class Workspace{
         return tp; 
     }
 
-    // Overloaded Users: Listar todos os usuários cuja carga de
-    // trabalho atual (IN_PROGRESS) ultrapassa 10 tarefas.
+    /**
+     * Lista todos os usuários com mais de 10 tarefas com status
+     * IN_PROGRESS {@link TaskStatus} com uso de Stream API.
+     *
+     * @return lista com nome de usuários
+     */
     public List<User> OverloadUsers(){
         
         List<User> olu = tasks.stream()
@@ -75,8 +116,15 @@ public class Workspace{
         return olu; 
     }
 
-    // Project Health: Para um dado projeto, calcular o percentual
-    // de conclusão (Tarefas DONE / Total de Tarefas).
+    /**
+     * Calcula o percentual de conclusão dos projetos {@link Project}
+     * no sistema, dividindo o total de tarefas concluídas
+     * pelo total de tarefas. Com uso de Stream API.
+     * 
+     * se as tarefas totais forem 0, o percentual é definido como 0. 
+     *
+     * @return lista de pares com nome do projeto e seu respectivo percentual
+     */
     public Map<Project, String> ProjectHealth(){
 
         Map<Project, String> res = projetos.stream()
@@ -102,8 +150,12 @@ public class Workspace{
         return res;
     }
 
-    // Global Bottlenecks: Identificar qual o status que possui o 
-    // maior número de tarefas no sistema (exceto DONE).
+    /**
+     * Identifica qual status de tarefa {@link TaskStatus}, exceto DONE,
+     * possui o maior número de Tasks cadastradas com uso de Stream API.
+     *
+     * @return TaskStatus com maior recorrência
+     */
     public TaskStatus GlobalBottlenecks(){
         
         TaskStatus maiorTask = tasks.stream()
@@ -120,6 +172,13 @@ public class Workspace{
         return maiorTask;
     }
 
+    /**
+     * Busca um objeto do tipo Project {@link Project} pelo seu nome,
+     * retorna valor null se não existir.
+     *
+     * @param nome nome do projeto sendo procurado
+     * @return projeto que corresponde ao nome
+     */
     public Project buscarProj(String nome){
         
         Project proj = projetos.stream()
