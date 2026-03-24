@@ -55,7 +55,7 @@ public class LogProcessor {
                             case "CREATE_USER" -> {
                                 if(!User.isValidEmailAddress(p[2]) || p[2] == null || p[2].isBlank()){
                                     try {
-                                        throw new IllegalArgumentException("Insira um email válido.");
+                                        throw new IllegalArgumentException("[WARN] Insira um email válido.");
                                     } catch (Exception e) {
                                         System.out.println(e.getMessage());
                                 }
