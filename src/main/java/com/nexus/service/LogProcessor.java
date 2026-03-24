@@ -32,7 +32,12 @@ public class LogProcessor {
                         switch (action) {
                             case "CREATE_USER" -> {
                                 if(!User.isValidEmailAddress(p[2]) || p[2] == null || p[2].isBlank()){
-                                    throw new IllegalArgumentException("Insira um email válido."); 
+                                    try {
+                                        throw new IllegalArgumentException("Insira um email válido.");
+                                    } catch (Exception e) {
+                                        System.out.println(e.getMessage());
+                                }
+                                    
                                 }
                                 else{
                                     User temp = new User(p[1], p[2]);
@@ -73,7 +78,11 @@ public class LogProcessor {
 
                                 if(_task.getId() != Integer.parseInt(p[1])){
                                     Task.totalValidationErrors++;
-                                    throw new NexusValidationException("[WARN] Tarefa não existente!");
+                                    try {
+                                        throw new NexusValidationException("[WARN] Tarefa não existente!");
+                                    } catch (Exception e) {
+                                        System.out.println(e.getMessage());
+                                    }
                                 }
                                 
 
@@ -92,9 +101,13 @@ public class LogProcessor {
                                     }
                                 }
 
-                                if(_task.getId() != Integer.parseInt(p[1])){
+                                if(_task == null){
                                     Task.totalValidationErrors++;
-                                    throw new NexusValidationException("[WARN] Tarefa não existente!");
+                                    try {
+                                        throw new NexusValidationException("[WARN] Tarefa não existente!");
+                                    } catch (Exception e) {
+                                        System.out.println(e.getMessage());
+                                    }
                                 }
 
                                 else{
@@ -113,17 +126,21 @@ public class LogProcessor {
                                             break;
                                         
                                         default:
-                                            throw new IllegalArgumentException("[WARN] Status de Tarefa não existente.");
+                                            try {
+                                                throw new IllegalArgumentException("[WARN] Status de Tarefa não existente.");
+                                            } catch (Exception e) {
+                                                System.out.println(e.getMessage());
+                                            }
                                     }
                                     System.out.println("[LOG] Status da tarefa foi atualizado.");
                                 }
                             }
 
                             case "REPORT_STATUS" ->{
-                                workspace.TopPerformers();
-                                workspace.ProjectHealth(workspace.buscarProj(p[1]));
-                                workspace.OverloadUsers();
-                                workspace.GlobalBottlenecks();
+                                System.out.println("Top Performers: " + workspace.TopPerformers());
+                                System.out.println("Project Health: " + workspace.ProjectHealth());
+                                System.out.println("Overload Users: " + workspace.OverloadUsers());
+                                System.out.println("Global Bottlenecks: " + workspace.GlobalBottlenecks());
                             }
 
                             default -> System.err.println("[WARN] Ação desconhecida: " + action);

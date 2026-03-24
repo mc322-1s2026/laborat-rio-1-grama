@@ -77,18 +77,29 @@ public class Workspace{
 
     // Project Health: Para um dado projeto, calcular o percentual
     // de conclusão (Tarefas DONE / Total de Tarefas).
-    public String ProjectHealth(Project p){
-        
-        long t_total = getTasks().stream().count();
-        List<Task> tasks = getTasks().stream()
-            .filter(t -> t.getStatus().equals(TaskStatus.DONE))
-            .collect(Collectors.toList());
-        long t_done = tasks.stream().count();
-        double percent = (double) t_done/t_total;
-        String res = String.format("%.2f%%", percent*100);
+    public Map<Project, String> ProjectHealth(){
 
+        Map<Project, String> res = projetos.stream()
+        .collect(Collectors.toMap(
+            p -> p,
+            p -> {
+                long t_total = p.getTasks().size();
+                long t_done = p.getTasks().stream()
+                    .filter(t -> t.getStatus().equals(TaskStatus.DONE))
+                    .count();
+
+                double percent;
+
+                if(t_total == 0){
+                    percent = 0;
+                } 
+                else{
+                    percent = (double) t_done / t_total;
+                }
+                return String.format("%.2f%%", percent * 100);
+            }
+        ));
         return res;
-
     }
 
     // Global Bottlenecks: Identificar qual o status que possui o 

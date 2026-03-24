@@ -67,17 +67,7 @@ public class Main {
                             break;
                     
                         case "3":
-                            System.out.println("Nome do Projeto: ");
-                            String proj = scanner.nextLine();
-                            Project p = workspace.buscarProj(proj);
-
-                            if(p != null){
-                                System.out.println(workspace.ProjectHealth(p));
-                            } 
-                            else{
-                                System.out.println("Projeto não encontrado.");
-                            }
-
+                            System.out.println(workspace.ProjectHealth());
                             break;
 
                         case "4":
@@ -174,6 +164,10 @@ public class Main {
         }
     }
 
+    /**
+     * Coleta detalhes de um novo Projeto, constrói um {@link Project} e
+     * o acrescenta ao workspace. Busca o projeto pelo nome e se já existe, ignora o comando
+     */
     private static void createProject(){
         System.out.println("Nome do Projeto: ");
         String nome = scanner.nextLine();

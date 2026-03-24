@@ -36,4 +36,9 @@ public class Project {
     public String getName(){
         return this.Nome;
     }
+
+    @Override
+    public String toString() {
+        return this.getName();
+    }
 }
