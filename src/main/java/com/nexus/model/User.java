@@ -25,7 +25,6 @@ public class User {
             throw new IllegalArgumentException("Username não pode ser vazio.");
         }
         if (email == null || email.isBlank() || !isValidEmailAddress(email)){
-            // Talvez achar um jeito de considerar coisa além do ".com"
             throw new IllegalArgumentException("Insira um email válido.");
         }
         this.username = username;

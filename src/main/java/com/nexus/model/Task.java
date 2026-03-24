@@ -42,7 +42,6 @@ public class Task {
         this.projeto = projeto;
         this.owner = null;
         
-        // Ação do Aluno:
         totalTasksCreated++; 
     }
 
@@ -66,7 +65,7 @@ public class Task {
             totalValidationErrors++;
             throw new NexusValidationException("Tarefa bloqueada: Não é possível alterar seu status.");
         } else
-        {/* Caso contrário, é possível colocar a tarefa como IN_PROGRESS */
+        {
             this.owner = user;
             this.status = TaskStatus.IN_PROGRESS;
             activeWorkload++;
@@ -100,15 +99,14 @@ public class Task {
      * ser bloqueada ou não
      */
     public void setBlocked(boolean blocked) {
-        /* Task precisa não estar DONE! */
         if((this.status != TaskStatus.DONE)){
             if (blocked) 
             {
                 this.status = TaskStatus.BLOCKED;
             } else {
-                this.status = TaskStatus.TO_DO; // Simplificação para o Lab
+                this.status = TaskStatus.TO_DO;
             }
-        } else { /* Tentaram bloquear uma tarefa com status "DONE" */
+        } else {
             totalValidationErrors++;
             throw new NexusValidationException("Tarefa em status \"DONE\" não pode ser bloqueada.");
         }
