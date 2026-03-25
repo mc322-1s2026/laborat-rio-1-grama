@@ -1,6 +1,7 @@
 package com.nexus.model;
 import java.util.List;
 
+import java.util.Collections;
 import com.nexus.exception.NexusValidationException;
 
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class Project {
      * @return lista de tarefas
      */
     public List<Task> getTasks(){
-        return this.Tasks;
+        return Collections.unmodifiableList(Tasks);
     }
 
     /**
